@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+<meta charset="UTF-8">
+<title>Exercício 26 - Circunferência</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+margin:0;
+}
+
+header{
+background:#2c3e50;
+color:white;
+padding:15px;
+text-align:center;
+font-size:22px;
+}
+
+.container{
+width:1100px;
+margin:auto;
+padding:20px;
+}
+
+.box{
+background:white;
+padding:20px;
+border-radius:8px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+input{
+width:60px;
+padding:5px;
+margin:5px;
+}
+
+select{
+padding:5px;
+}
+
+button{
+padding:8px 15px;
+background:#3498db;
+border:none;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+.result{
+margin-top:20px;
+background:#eef;
+padding:15px;
+border-radius:6px;
+line-height:1.6;
+}
+
+svg{
+background:white;
+border:1px solid #ccc;
+margin-top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+Determinar Centro e Raio da Circunferência
+<p>Portal de utilidades acadêmicas desenvolvidas por Wesley Cardoso @bl4cks1d3</p>
+<a href="../index.html" style="color:white; text-decoration:none; font-weight:bold;">Voltar ao Início</a>
+
+</header>
+
+<div class="container">
+
+<div class="box">
+
+<h3>Equação</h3>
+
+<label>
+<input type="checkbox" id="temX" checked>
+Existe termo (x-a)²
+</label>
+
+<br>
+
+(x 
+
+<select id="sx">
+<option value="-">-</option>
+<option value="+">+</option>
+</select>
+
+<input id="a" value="5">
+
+)²
+
+<br><br>
+
+<label>
+<input type="checkbox" id="temY" checked>
+Existe termo (y-b)²
+</label>
+
+<br>
+
+(y
+
+<select id="sy">
+<option value="-">-</option>
+<option value="+">+</option>
+</select>
+
+<input id="b" value="3">
+
+)²
+
+<br><br>
+
+=
+
+<input id="r2" value="1">
+
+<br><br>
+
+<button onclick="resolver()">Resolver</button>
+
+<div id="resultado" class="result"></div>
+
+<svg id="plano" width="800" height="500"></svg>
+
+</div>
+
+</div>
+
+<script>
+
+let escala=40
+let cx=400
+let cy=250
+
+function px(x){return cx + x*escala}
+function py(y){return cy - y*escala}
+
+function desenharPlano(){
+
+let svg=document.getElementById("plano")
+svg.innerHTML=""
+
+for(let x=-10;x<=10;x++){
+
+svg.innerHTML+=`<line x1="${px(x)}" y1="0" x2="${px(x)}" y2="500"
+stroke="#bbb" stroke-dasharray="4"/>`
+
+svg.innerHTML+=`<text x="${px(x)+3}" y="${cy+15}" font-size="12">${x}</text>`
+}
+
+for(let y=-6;y<=6;y++){
+
+svg.innerHTML+=`<line x1="0" y1="${py(y)}" x2="800" y2="${py(y)}"
+stroke="#bbb" stroke-dasharray="4"/>`
+
+if(y!=0)
+svg.innerHTML+=`<text x="${cx+5}" y="${py(y)-5}" font-size="12">${y}</text>`
+}
+
+svg.innerHTML+=`<line x1="0" y1="${cy}" x2="800" y2="${cy}" stroke="black"/>`
+svg.innerHTML+=`<line x1="${cx}" y1="0" x2="${cx}" y2="500" stroke="black"/>`
+
+}
+
+function resolver(){
+
+desenharPlano()
+
+let temX=document.getElementById("temX").checked
+let temY=document.getElementById("temY").checked
+
+let a=Number(document.getElementById("a").value)
+let b=Number(document.getElementById("b").value)
+
+let sx=document.getElementById("sx").value
+let sy=document.getElementById("sy").value
+
+let r2=Number(document.getElementById("r2").value)
+
+let centroX=0
+let centroY=0
+
+if(temX){
+centroX = sx=="-" ? a : -a
+}
+
+if(temY){
+centroY = sy=="-" ? b : -b
+}
+
+let r=Math.sqrt(r2)
+
+let svg=document.getElementById("plano")
+
+svg.innerHTML+=`
+<circle
+cx="${px(centroX)}"
+cy="${py(centroY)}"
+r="${r*escala}"
+stroke="purple"
+fill="none"
+stroke-width="2"
+/>
+`
+
+svg.innerHTML+=`
+<circle
+cx="${px(centroX)}"
+cy="${py(centroY)}"
+r="5"
+fill="red"
+/>
+`
+
+svg.innerHTML+=`
+<text x="${px(centroX)+6}" y="${py(centroY)-6}">
+O(${centroX},${centroY})
+</text>
+`
+
+document.getElementById("resultado").innerHTML = `
+
+<b>Passo 1 — Equação padrão</b>
+
+<br>
+
+(x-a)² + (y-b)² = r²
+
+<br><br>
+
+<b>Passo 2 — Identificar valores</b>
+
+<br>
+
+a = ${centroX}
+
+<br>
+
+b = ${centroY}
+
+<br>
+
+r² = ${r2}
+
+<br><br>
+
+<b>Passo 3 — Centro</b>
+
+<br>
+
+O(${centroX}, ${centroY})
+
+<br><br>
+
+<b>Passo 4 — Raio</b>
+
+<br>
+
+r = √${r2}
+
+<br>
+
+r = ${r}
+
+<br><br>
+
+<b>Resposta final</b>
+
+<br><br>
+
+<b>O(${centroX}, ${centroY}); r=${r}</b>
+
+`
+
+}
+
+desenharPlano()
+
+</script>
+
+</body>
+
+</html>

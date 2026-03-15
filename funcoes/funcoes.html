@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+<meta charset="UTF-8">
+<title>Resolução Gráfica de Exercícios</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f0f0f0;
+margin:0;
+}
+
+header{
+background:#2c3e50;
+color:white;
+text-align:center;
+padding:15px;
+font-size:22px;
+}
+
+.container{
+width:1100px;
+margin:auto;
+padding:20px;
+}
+
+.box{
+background:white;
+padding:20px;
+border-radius:8px;
+box-shadow:0 0 8px rgba(0,0,0,0.2);
+}
+
+svg{
+background:white;
+border:1px solid #ccc;
+}
+
+input{
+width:60px;
+padding:5px;
+margin:5px;
+}
+
+button{
+padding:8px;
+background:#3498db;
+border:none;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+.result{
+margin-top:15px;
+background:#eef;
+padding:10px;
+border-radius:6px;
+font-size:16px;
+line-height:1.6;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+Resolução Visual de Exercícios no Plano Cartesiano
+<p>Portal de utilidades acadêmicas desenvolvidas por Wesley Cardoso @bl4cks1d3</p>
+<a href="../index.html" style="color:white; text-decoration:none; font-weight:bold;">Voltar ao Início</a>
+
+</header>
+
+<div class="container">
+
+<div class="box">
+
+<h2>Distância entre dois pontos</h2>
+
+P1(x₁,y₁)
+
+<input id="x1" value="1">
+<input id="y1" value="2">
+
+P2(x₂,y₂)
+
+<input id="x2" value="5">
+<input id="y2" value="4">
+
+<button onclick="resolver()">Resolver</button>
+
+<br><br>
+
+<svg id="plano" width="800" height="500"></svg>
+
+<div id="resultado" class="result"></div>
+
+</div>
+
+</div>
+
+<script>
+
+let escala=40
+let cx=400
+let cy=250
+
+function px(x){return cx + x*escala}
+function py(y){return cy - y*escala}
+
+function desenharPlano(){
+
+let svg=document.getElementById("plano")
+
+svg.innerHTML=""
+
+for(let x=-10;x<=10;x++){
+
+svg.innerHTML+=`<line x1="${px(x)}" y1="0" x2="${px(x)}" y2="500"
+stroke="#aaa" stroke-dasharray="3"/>`
+
+svg.innerHTML+=`<text x="${px(x)+3}" y="${cy+15}" font-size="12">${x}</text>`
+}
+
+for(let y=-6;y<=6;y++){
+
+svg.innerHTML+=`<line x1="0" y1="${py(y)}" x2="800" y2="${py(y)}"
+stroke="#aaa" stroke-dasharray="3"/>`
+
+if(y!=0)
+svg.innerHTML+=`<text x="${cx+5}" y="${py(y)-5}" font-size="12">${y}</text>`
+}
+
+svg.innerHTML+=`<line x1="0" y1="${cy}" x2="800" y2="${cy}" stroke="black"/>`
+svg.innerHTML+=`<line x1="${cx}" y1="0" x2="${cx}" y2="500" stroke="black"/>`
+
+}
+
+function resolver(){
+
+desenharPlano()
+
+let x1=Number(document.getElementById("x1").value)
+let y1=Number(document.getElementById("y1").value)
+
+let x2=Number(document.getElementById("x2").value)
+let y2=Number(document.getElementById("y2").value)
+
+let svg=document.getElementById("plano")
+
+svg.innerHTML+=`<circle cx="${px(x1)}" cy="${py(y1)}" r="6" fill="red"/>`
+svg.innerHTML+=`<circle cx="${px(x2)}" cy="${py(y2)}" r="6" fill="blue"/>`
+
+svg.innerHTML+=`<text x="${px(x1)+5}" y="${py(y1)-5}">P1</text>`
+svg.innerHTML+=`<text x="${px(x2)+5}" y="${py(y2)-5}">P2</text>`
+
+svg.innerHTML+=`
+<line x1="${px(x1)}" y1="${py(y1)}"
+x2="${px(x2)}" y2="${py(y1)}"
+stroke="orange" stroke-dasharray="4"/>
+`
+
+svg.innerHTML+=`
+<line x1="${px(x2)}" y1="${py(y1)}"
+x2="${px(x2)}" y2="${py(y2)}"
+stroke="orange" stroke-dasharray="4"/>
+`
+
+svg.innerHTML+=`
+<line x1="${px(x1)}" y1="${py(y1)}"
+x2="${px(x2)}" y2="${py(y2)}"
+stroke="red" stroke-width="2"/>
+`
+
+let dx=x2-x1
+let dy=y2-y1
+
+let d=Math.sqrt(dx*dx+dy*dy)
+
+document.getElementById("resultado").innerHTML=
+
+`
+<b>Passo 1 — Identificar os pontos</b><br>
+
+P1 = (${x1},${y1})<br>
+P2 = (${x2},${y2})
+
+<br><br>
+
+<b>Passo 2 — Aplicar a fórmula</b><br>
+
+d = √((x₂-x₁)² + (y₂-y₁)²)
+
+<br><br>
+
+<b>Passo 3 — Substituir valores</b>
+
+<br>
+
+d = √((${x2}-${x1})² + (${y2}-${y1})²)
+
+<br>
+
+d = √(${dx}² + ${dy}²)
+
+<br>
+
+d = √(${dx*dx} + ${dy*dy})
+
+<br>
+
+d = √(${dx*dx+dy*dy})
+
+<br><br>
+
+<b>Resultado</b>
+
+<br>
+
+d = ${d.toFixed(2)}
+
+`
+
+}
+
+desenharPlano()
+resolver()
+
+</script>
+
+</body>
+
+</html>
