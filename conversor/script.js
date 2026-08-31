@@ -78,6 +78,30 @@ function converter() {
     }
 
     // ==========================
+    // DECIMAL → OCTAL
+    // ==========================
+    else if (origem === 10 && destino === 8) {
+
+        explicacao += "Conversão Decimal → Octal\n";
+        explicacao += "Método: Divisões sucessivas por 8\n\n";
+
+        let temp = decimal;
+        let restos = [];
+
+        while (temp > 0) {
+            let quociente = Math.floor(temp / 8);
+            let resto = temp % 8;
+            explicacao += temp + " ÷ 8 = " + quociente + " resto " + resto + "\n";
+            restos.push(resto);
+            temp = quociente;
+        }
+
+        explicacao += "\nLendo restos de baixo para cima:\n";
+        let oct = restos.reverse().join("");
+        explicacao += "Resultado Final: " + oct;
+    }
+
+    // ==========================
     // BINÁRIO → DECIMAL
     // ==========================
     else if (origem === 2 && destino === 10) {
@@ -92,6 +116,28 @@ function converter() {
             let bit = parseInt(numero[i]);
             let valor = bit * Math.pow(2, potencia - i);
             explicacao += bit + " × 2^" + (potencia - i) + " = " + valor + "\n";
+            soma += valor;
+        }
+
+        explicacao += "\nSomando todos os valores:\n";
+        explicacao += "Resultado Final: " + soma;
+    }
+
+    // ==========================
+    // OCTAL → DECIMAL
+    // ==========================
+    else if (origem === 8 && destino === 10) {
+
+        explicacao += "Conversão Octal → Decimal\n";
+        explicacao += "Método: Multiplicação por potências de 8\n\n";
+
+        let potencia = numero.length - 1;
+        let soma = 0;
+
+        for (let i = 0; i < numero.length; i++) {
+            let digito = parseInt(numero[i], 8);
+            let valor = digito * Math.pow(8, potencia - i);
+            explicacao += digito + " × 8^" + (potencia - i) + " = " + valor + "\n";
             soma += valor;
         }
 
@@ -135,6 +181,11 @@ function converter() {
             explicacao += decimal.toString(2);
         }
 
+        if (destino === 8) {
+            explicacao += "2) Converter Decimal → Octal\n";
+            explicacao += decimal.toString(8);
+        }
+
         if (destino === 16) {
             explicacao += "2) Converter Decimal → Hexadecimal\n";
             explicacao += decimal.toString(16).toUpperCase();
@@ -150,12 +201,13 @@ function converter() {
 function gerarTabela() {
 
     let html = "<table>";
-    html += "<tr><th>Decimal</th><th>Binário</th><th>Hexadecimal</th></tr>";
+    html += "<tr><th>Decimal</th><th>Binário</th><th>Octal</th><th>Hexadecimal</th></tr>";
 
     for (let i = 0; i <= 32; i++) {
         html += "<tr>";
         html += "<td>" + i + "</td>";
         html += "<td>" + i.toString(2) + "</td>";
+        html += "<td>" + i.toString(8) + "</td>";
         html += "<td>" + i.toString(16).toUpperCase() + "</td>";
         html += "</tr>";
     }
