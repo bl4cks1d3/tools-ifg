@@ -196,6 +196,167 @@ function converter() {
 }
 
 // ==========================
+// ARITMÉTICA BINÁRIA
+// ==========================
+function calcularBinario() {
+
+    let bin1 = document.getElementById("bin1").value.trim();
+    let bin2 = document.getElementById("bin2").value.trim();
+    let operacao = document.getElementById("operacaoBin").value;
+    let saida = document.getElementById("resultadoBin");
+
+    let regexBinario = /^[01]+$/;
+    if (!regexBinario.test(bin1) || !regexBinario.test(bin2)) {
+        saida.innerText = "Digite números binários válidos (apenas 0 e 1).";
+        return;
+    }
+
+    if (operacao === "soma") {
+        saida.innerText = somaBinaria(bin1, bin2);
+    } else if (operacao === "subtracao") {
+        saida.innerText = subtracaoBinaria(bin1, bin2);
+    } else if (operacao === "multiplicacao") {
+        saida.innerText = multiplicacaoBinaria(bin1, bin2);
+    } else if (operacao === "divisao") {
+        saida.innerText = divisaoBinaria(bin1, bin2);
+    }
+}
+
+function somaBinaria(a, b) {
+
+    let maxLen = Math.max(a.length, b.length);
+    a = a.padStart(maxLen, "0");
+    b = b.padStart(maxLen, "0");
+
+    let explicacao = "Soma Binária\n";
+    explicacao += "Método: soma bit a bit, da direita para a esquerda, com vai-um (carry)\n\n";
+
+    let resultado = "";
+    let carry = 0;
+
+    for (let i = maxLen - 1; i >= 0; i--) {
+        let bitA = parseInt(a[i]);
+        let bitB = parseInt(b[i]);
+        let soma = bitA + bitB + carry;
+        let bitResultado = soma % 2;
+        let novoCarry = Math.floor(soma / 2);
+
+        explicacao += bitA + " + " + bitB + " + carry(" + carry + ") = " + soma +
+            " → escreve " + bitResultado + ", carry " + novoCarry + "\n";
+
+        resultado = bitResultado + resultado;
+        carry = novoCarry;
+    }
+
+    if (carry > 0) {
+        resultado = carry + resultado;
+        explicacao += "\nSobrou carry final: " + carry + " (acrescentado à esquerda)\n";
+    }
+
+    explicacao += "\nResultado Final: " + resultado;
+    return explicacao;
+}
+
+function subtracaoBinaria(a, b) {
+
+    let decA = parseInt(a, 2);
+    let decB = parseInt(b, 2);
+    let negativo = false;
+
+    if (decB > decA) {
+        negativo = true;
+        let troca = a;
+        a = b;
+        b = troca;
+    }
+
+    let maxLen = Math.max(a.length, b.length);
+    a = a.padStart(maxLen, "0");
+    b = b.padStart(maxLen, "0");
+
+    let explicacao = "Subtração Binária\n";
+    explicacao += "Método: subtração bit a bit, da direita para a esquerda, com empréstimo (borrow)\n\n";
+
+    let resultado = "";
+    let borrow = 0;
+
+    for (let i = maxLen - 1; i >= 0; i--) {
+        let bitA = parseInt(a[i]);
+        let bitB = parseInt(b[i]) + borrow;
+        let bitResultado;
+
+        if (bitA >= bitB) {
+            bitResultado = bitA - bitB;
+            explicacao += bitA + " - " + bitB + " = " + bitResultado + "\n";
+            borrow = 0;
+        } else {
+            bitResultado = (bitA + 2) - bitB;
+            explicacao += bitA + " - " + bitB + " = " + bitResultado + " (empresta 1 da próxima coluna)\n";
+            borrow = 1;
+        }
+
+        resultado = bitResultado + resultado;
+    }
+
+    resultado = resultado.replace(/^0+(?=.)/, "");
+
+    explicacao += "\nResultado Final: " + (negativo ? "-" : "") + resultado;
+    return explicacao;
+}
+
+function multiplicacaoBinaria(a, b) {
+
+    let explicacao = "Multiplicação Binária\n";
+    explicacao += "Método: deslocamento e soma dos produtos parciais\n\n";
+    explicacao += "  " + a + "\n× " + b + "\n\n";
+
+    let parciais = [];
+
+    for (let i = b.length - 1; i >= 0; i--) {
+        let bit = b[i];
+        let deslocamento = b.length - 1 - i;
+
+        if (bit === "1") {
+            let parcial = a + "0".repeat(deslocamento);
+            parciais.push(parcial);
+            explicacao += a + " × 1 (posição " + deslocamento + ") → " + parcial + "\n";
+        } else {
+            explicacao += a + " × 0 (posição " + deslocamento + ") → ignorado\n";
+        }
+    }
+
+    let somaDecimal = parciais.reduce((acc, p) => acc + parseInt(p, 2), 0);
+    let resultado = somaDecimal.toString(2);
+
+    explicacao += "\nSomando os produtos parciais:\n";
+    parciais.forEach(p => explicacao += "  " + p + "\n");
+
+    explicacao += "\nResultado Final: " + resultado;
+    return explicacao;
+}
+
+function divisaoBinaria(a, b) {
+
+    let decA = parseInt(a, 2);
+    let decB = parseInt(b, 2);
+
+    if (decB === 0) {
+        return "Erro: divisão por zero.";
+    }
+
+    let quociente = Math.floor(decA / decB);
+    let resto = decA % decB;
+
+    let explicacao = "Divisão Binária\n";
+    explicacao += "Método: conversão para decimal, divisão e retorno para binário\n\n";
+    explicacao += a + " (decimal " + decA + ") ÷ " + b + " (decimal " + decB + ")\n\n";
+    explicacao += "Quociente decimal: " + quociente + " → binário: " + quociente.toString(2) + "\n";
+    explicacao += "Resto decimal: " + resto + " → binário: " + resto.toString(2) + "\n\n";
+    explicacao += "Resultado Final: Quociente = " + quociente.toString(2) + ", Resto = " + resto.toString(2);
+    return explicacao;
+}
+
+// ==========================
 // TABELA
 // ==========================
 function gerarTabela() {

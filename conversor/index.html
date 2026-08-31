@@ -109,6 +109,29 @@ header h1{
 </div>
 
 <div class="box">
+<h2>Aritmética Binária</h2>
+
+<label>Número 1 (binário):</label><br>
+<input type="text" id="bin1" placeholder="Ex: 1011"><br>
+
+<label>Operação:</label><br>
+<select id="operacaoBin">
+    <option value="soma">Soma (+)</option>
+    <option value="subtracao">Subtração (-)</option>
+    <option value="multiplicacao">Multiplicação (×)</option>
+    <option value="divisao">Divisão (÷)</option>
+</select><br>
+
+<label>Número 2 (binário):</label><br>
+<input type="text" id="bin2" placeholder="Ex: 110"><br>
+
+<button onclick="calcularBinario()">Calcular</button>
+
+<div class="resultado" id="resultadoBin"></div>
+
+</div>
+
+<div class="box">
 <button onclick="gerarTabela()">Gerar Tabela (0 a 32)</button>
 <div id="tabela"></div>
 </div>
